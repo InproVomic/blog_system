@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客列表页</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="nav">
+        <img src="..\img\logo.png" alt="">
+        <span>月亮群的博客系统</span>
+        <span class="space"></span>
+        <a href="blog_list.html" class="intop">主页</a>
+        <a href="blog_edit.html" class="intop">写博客</a>
+        <a href="loginOut" class="intop">注销</a>
+    </div>
+    <div class="container">
+        <div class="container-left">
+            <div class="card">
+                <img src="../img/hutao.png" alt="">
+                <h3></h3>
+                <a href="https://github.com/InproVomic?tab=repositories">github地址</a>
+                <div class="counter">
+                    <span>文章</span>
+                    <span>分类</span>
+                </div>
+                <div class="counter">
+                    <span>1</span>
+                    <span>2 </span>
+                </div>
+            </div>
+        </div>
+        <div class="container-right">
+            <!-- <div class="blog">
+                <div class="title">
+                    这是第一篇博客
+                </div>
+                <div class="date">
+                    2024.4.20
+                </div>
+                <div class="desc">
+                    准备写本群个人空间管理，要登录密码，然后大家可以通过我给的白名单进行注册。只有注册的人才可以看到其他人的个人空间，个人空间的背景可以自定义，大家可以记笔记或者干啥都行，相当于更自由的QQ空间或者说朋友圈
+                </div>
+                <a class="detail" href="blog_content.html?blogId=1">查看全文&gt&gt</a>
+            </div> -->
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+    <script>
+        function getBlogs() {
+            $.ajax({
+                type: 'get',
+                url: 'blog',
+                success: function (body) {
+                    let container = document.querySelector(".container-right")
+                    for (let i = 0; i < body.length; ++i) {
+                        let blog = body[i]//从收到的报文中得到元素
+                        let blogDiv = document.createElement('div')
+                        blogDiv.className = 'blog'
+                        let titleDiv = document.createElement('div')
+                        titleDiv.className = 'title'
+                        titleDiv.innerHTML = blog.title
+
+                        let dateDiv = document.createElement('div')
+                        dateDiv.className = 'date'
+                        dateDiv.innerHTML = blog.postTime
+
+                        let descDiv = document.createElement('div')
+                        descDiv.className = 'desc'
+                        descDiv.innerHTML = blog.content
+
+                        let detail = document.createElement('a')
+                        detail.className = 'detail' 
+                        detail.href = 'blog_content.html?blogId=' + blog.blogId
+                        detail.innerHTML = '查看全文 &gt;&gt'
+
+                        blogDiv.appendChild(titleDiv)
+                        blogDiv.appendChild(dateDiv)
+                        blogDiv.appendChild(descDiv)
+                        blogDiv.appendChild(detail)
+
+                        container.appendChild(blogDiv)
+                    }
+                }
+            })
+        }
+        
+        getLoginStatus()
+
+        getBlogs()
+
+        //获得当前用户的登录信息
+        function getUserInfo() {
+            $.ajax({
+                type: 'get',
+                url: 'userInfo',
+                success: function (user) {
+                    console.log(user)
+                    let h3 = document.querySelector('.card h3')
+                    h3.innerHTML = user.username
+                }
+            })
+        }
+        getUserInfo()
+    </script>
+</body>
+
+</html>
